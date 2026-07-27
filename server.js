@@ -1,4 +1,4 @@
-const express = require('express');
+const app = require("./src/app");
 const multer = require('multer');
 const mammoth = require('mammoth');
 const officeParser = require('officeparser');
@@ -7,15 +7,13 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
-const app = express();
+
 const PORT = 3000;
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODEL = 'llama-3.3-70b-versatile';
 
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),

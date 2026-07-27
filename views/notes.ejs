@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= d.title %> - Infographic Notes</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .status-bar {
+      position: sticky; top: 0; z-index: 100;
+      padding: 10px 16px; font-family: system-ui;
+      font-size: 14px; font-weight: 600;
+    }
+    .status-ai { background: #e8f5e9; color: #1b5e20; border-bottom: 2px solid #43a047; }
+    .status-preview { background: #fff3e0; color: #e65100; border-bottom: 2px solid #fb8c00; }
+    .print-hide { text-align: center; margin: 12px; }
+    @media print { .status-bar, .print-hide { display: none !important; } }
+  </style>
+</head>
+<body>
+<%
+  // Safe defaults (only used for missing fields or pure preview)
+  const defaults = {
+    title: "HIGH COURT AND STATE JUDICIARY",
+    meaning: "The High Court is the highest judicial institution at the state level.",
+    position_points: [
+      "Supreme Court judgments bind all courts in India.",
+      "High Court judgments bind all civil & criminal courts within that State."
+    ],
+    importance_points: [
+      "Acts as a constitutional check on legislative and executive actions of State governments.",
+      "Ensures that State laws conform to the Constitution of India."
+    ],
+    protector_text: "Under Article 226, the High Court can issue writs for enforcement of rights.",
+    timeline: [
+      { year: "Indian High Courts Act, 1861", desc: "Created unified High Court structure." },
+      { year: "Present Status", desc: "25 High Courts for States and UTs." }
+    ],
+    articles: [
+      { article: "Art. 214", provision: "Every State shall have a High Court." },
+      { article: "Art. 226", provision: "Power to issue writs." }
+    ],
+    functions: [
+      { name: "Original Jurisdiction", desc: "Writ petitions (Art. 226)" },
+      { name: "Appellate Jurisdiction", desc: "Appeals from subordinate courts" },
+      { name: "Supervisory Jurisdiction", desc: "Superintendence (Art. 227)" },
+      { name: "Advisory Jurisdiction", desc: "Advice on constitutional matters" }
+    ],
+    quick_revision: [
+      "Highest judicial authority at State level",
+      "Articles 214–231 deal with High Courts",
+      "Protects rights mainly through Article 226"
+    ]
+  };
+
+  const isGenerated = !!(data && (data.title || data.meaning || data.timeline));
+
+  // Merge AI data + defaults so missing keys never crash the page
+  const d = {
+    title: (data && data.title) || defaults.title,
+    meaning: (data && data.meaning) || defaults.meaning,
+    position_points: Array.isArray(data?.position_points) ? data.position_points : defaults.position_points,
+    importance_points: Array.isArray(data?.importance_points) ? data.importance_points : defaults.importance_points,
+    protector_text: (data && data.protector_text) || defaults.protector_text,
+    timeline: Array.isArray(data?.timeline) ? data.timeline : defaults.timeline,
+    articles: Array.isArray(data?.articles) ? data.articles : defaults.articles,
+    functions: Array.isArray(data?.functions) ? data.functions : defaults.functions,
+    quick_revision: Array.isArray(data?.quick_revision) ? data.quick_revision : defaults.quick_revision
+  };
+%>
+
+  <% if (isGenerated) { %>
+    <div class="status-bar status-ai">✅ AI Generated Notes (from your uploaded file)</div>
+  <% } else { %>
+    <div class="status-bar status-preview">⚠️ PREVIEW MODE — hardcoded sample. Upload a file on Home to generate real notes.</div>
+  <% } %>
+
+  <div class="print-hide">
+    <a href="/" style="display:inline-block;padding:10px 16px;background:#1565c0;color:#fff;text-decoration:none;border-radius:8px;">← Generate New Notes</a>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="page">
+    <h1 class="main-title"><%= d.title %></h1>
+    <div class="title-line"></div>
+
+    <div class="two-col">
+      <div>
+        <h2>1. INTRODUCTION</h2>
+
+        <div class="box">
+          <div class="box-title">Meaning</div>
+          <%= d.meaning %>
+        </div>
+
+        <h3>Position in Indian Judicial System</h3>
+        <div class="pyramid">
+          <div class="pyramid-level"><strong>Supreme Court of India</strong><br>Apex layer</div>
+          <div class="pyramid-level"><strong>High Courts (States)</strong><br>Intermediate</div>
+          <div class="pyramid-level"><strong>Subordinate Courts</strong><br>District & Lower Courts</div>
+        </div>
+
+        <% d.position_points.forEach(function(p) { %>
+          <p class="point"><%= p %></p>
+        <% }) %>
+
+        <h3>Importance</h3>
+        <% d.importance_points.forEach(function(p) { %>
+          <p class="point"><%= p %></p>
+        <% }) %>
+
+        <div class="box">
+          <div class="box-title">Protector of Rights</div>
+          <%= d.protector_text %>
+        </div>
+      </div>
+
+      <div>
+        <h2>2. HISTORICAL EVOLUTION</h2>
+        <div class="timeline">
+          <% d.timeline.forEach(function(item) { %>
+            <div class="timeline-item">
+              <strong><%= item.year || item.Year || '—' %></strong><br>
+              <%= item.desc || item.description || '' %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page">
+    <h1 class="main-title"><%= d.title %></h1>
+    <div class="title-line"></div>
+
+    <h2>3. CONSTITUTIONAL PROVISIONS</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:85px">Article</th>
+          <th>Provision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% d.articles.forEach(function(a) { %>
+          <tr>
+            <td><strong><%= a.article || a.Article || '—' %></strong></td>
+            <td><%= a.provision || a.desc || '' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h2>4. FUNCTIONS</h2>
+    <div class="flow-container">
+      <% d.functions.forEach(function(f) { %>
+        <div class="flow-box">
+          <strong><%= f.name || f.title || 'Function' %></strong><br><br>
+          <%= f.desc || f.description || '' %>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="quick-revision">
+      <h3>★ QUICK REVISION ★</h3>
+      <div class="two-col" style="gap:12px;">
+        <div>
+          <% d.quick_revision.slice(0, Math.ceil(d.quick_revision.length/2)).forEach(function(p) { %>
+            <p class="point"><%= p %></p>
+          <% }) %>
+        </div>
+        <div>
+          <% d.quick_revision.slice(Math.ceil(d.quick_revision.length/2)).forEach(function(p) { %>
+            <p class="point"><%= p %></p>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
